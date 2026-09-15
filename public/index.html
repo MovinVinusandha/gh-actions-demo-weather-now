@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WeatherNow</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>WeatherNow</h1>
+
+        <p class="subtitle">
+            Check the current weather anywhere
+        </p>
+
+        <div class="search">
+            <input
+                id="cityInput"
+                type="text"
+                placeholder="Enter city name"
+                value="Colombo"
+            >
+
+            <button id="searchButton">
+                Search
+            </button>
+        </div>
+
+        <p id="error" class="error"></p>
+
+        <section id="weatherCard" class="weather-card hidden">
+
+            <h2 id="location"></h2>
+
+            <img id="weatherIcon" alt="Weather icon">
+
+            <div id="temperature" class="temperature"></div>
+
+            <p id="description"></p>
+
+            <div class="details">
+
+                <div>
+                    <span>Feels Like</span>
+                    <strong id="feelsLike"></strong>
+                </div>
+
+                <div>
+                    <span>Humidity</span>
+                    <strong id="humidity"></strong>
+                </div>
+
+                <div>
+                    <span>Wind</span>
+                    <strong id="windSpeed"></strong>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
