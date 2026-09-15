@@ -1,0 +1,30 @@
+{
+  "name": "gh-actions-demo-weather-now",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/start.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vihanga-isuru/gh-actions-demo-weather-now.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vihanga-isuru/gh-actions-demo-weather-now/issues"
+  },
+  "homepage": "https://github.com/vihanga-isuru/gh-actions-demo-weather-now#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^30.5.1",
+    "supertest": "^7.2.2"
+  }
+}
