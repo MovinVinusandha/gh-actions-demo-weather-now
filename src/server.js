@@ -1,17 +1,56 @@
+require("dotenv").config();
+
 const express = require("express");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const FETCH_TIMEOUT_MS = 8000;
+const MAX_CITY_LENGTH = 100;
+// Letters (incl. accented), spaces, hyphens, apostrophes, commas, periods —
+// covers "New York", "Saint-Étienne", "St. Paul", "O'Fallon".
+const CITY_PATTERN = /^[\p{L}\s\-'.,]+$/u;
+
 app.use(express.static("public"));
 
-app.get("/api/weather", async (req, res) => {
-    const city = req.query.city;
+function validateCity(rawCity) {
+    if (typeof rawCity !== "string") {
+        return { error: "City is required" };
+    }
+
+    const city = rawCity.trim();
 
     if (!city) {
-        return res.status(400).json({
-            error: "City is required"
-        });
+        return { error: "City is required" };
+    }
+
+    if (city.length > MAX_CITY_LENGTH) {
+        return { error: "City name is too long" };
+    }
+
+    if (!CITY_PATTERN.test(city)) {
+        return { error: "City name contains invalid characters" };
+    }
+
+    return { city };
+}
+
+async function fetchWithTimeout(url, timeoutMs) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+        return await fetch(url, { signal: controller.signal });
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
+app.get("/api/weather", async (req, res) => {
+    const { city, error: validationError } = validateCity(req.query.city);
+
+    if (validationError) {
+        return res.status(400).json({ error: validationError });
     }
 
     const apiKey = process.env.OPENWEATHER_API_KEY;
@@ -29,7 +68,7 @@ app.get("/api/weather", async (req, res) => {
             `&appid=${apiKey}` +
             `&units=metric`;
 
-        const response = await fetch(url);
+        const response = await fetchWithTimeout(url, FETCH_TIMEOUT_MS);
 
         if (!response.ok) {
             if (response.status === 404) {
@@ -59,6 +98,14 @@ app.get("/api/weather", async (req, res) => {
         res.json(weather);
 
     } catch (error) {
+        if (error.name === "AbortError") {
+            console.error("OpenWeather request timed out:", city);
+
+            return res.status(504).json({
+                error: "Weather service took too long to respond"
+            });
+        }
+
         console.error(error);
 
         res.status(500).json({

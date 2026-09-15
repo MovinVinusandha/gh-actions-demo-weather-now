@@ -3,71 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>WeatherNow</title>
-
+    <meta name="description" content="WeatherNow — Real-time weather conditions for any city in the world. Fast, accurate, and beautifully presented.">
+    <title>WeatherNow — Real-time Weather</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <main class="container">
+    <!-- Animated gradient background -->
+    <div class="bg-canvas" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
 
-        <h1>WeatherNow</h1>
+    <main class="panel">
 
-        <p class="subtitle">
-            Check the current weather anywhere
-        </p>
+        <!-- Header -->
+        <header class="panel-header">
+            <div class="logo-row">
+                <span class="logo-icon">⛅</span>
+                <h1>WeatherNow</h1>
+            </div>
+            <p class="subtitle">Real-time weather, wherever you are.</p>
+        </header>
 
-        <div class="search">
-            <input
-                id="cityInput"
-                type="text"
-                placeholder="Enter city name"
-                value="Colombo"
-            >
+        <!-- Search -->
+        <section class="search-section" aria-label="City search">
+            <form id="searchForm" class="search-form" novalidate>
+                <div class="search-input-wrapper">
+                    <span class="search-icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </span>
+                    <input
+                        id="cityInput"
+                        type="text"
+                        placeholder="Search for a city…"
+                        value="Colombo"
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-label="City name"
+                    >
+                </div>
+                <button id="searchButton" type="submit">
+                    <span class="btn-text">Search</span>
+                    <span class="btn-icon" aria-hidden="true">→</span>
+                </button>
+            </form>
 
-            <button id="searchButton">
-                Search
-            </button>
-        </div>
+            <!-- Status / error messages -->
+            <p id="status" class="status" role="status" aria-live="polite"></p>
+        </section>
 
-        <p id="error" class="error"></p>
+        <!-- Weather card -->
+        <section id="weatherCard" class="weather-card hidden" aria-label="Weather results" aria-live="polite">
 
-        <section id="weatherCard" class="weather-card hidden">
+            <div class="card-glow" aria-hidden="true"></div>
 
-            <h2 id="location"></h2>
+            <div class="card-header">
+                <div class="location-row">
+                    <span class="pin-icon" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </span>
+                    <span id="location" class="location-text"></span>
+                </div>
+                <p id="description" class="weather-desc"></p>
+            </div>
 
-            <img id="weatherIcon" alt="Weather icon">
+            <div class="card-main">
+                <div class="temp-group">
+                    <div id="temperature" class="temperature"></div>
+                </div>
+                <img id="weatherIcon" class="weather-icon" alt="" width="100" height="100">
+            </div>
 
-            <div id="temperature" class="temperature"></div>
+            <div class="details" role="list">
 
-            <p id="description"></p>
-
-            <div class="details">
-
-                <div>
-                    <span>Feels Like</span>
-                    <strong id="feelsLike"></strong>
+                <div class="detail-item" role="listitem">
+                    <span class="detail-icon" aria-hidden="true">🌡️</span>
+                    <div class="detail-content">
+                        <span class="detail-label">Feels Like</span>
+                        <strong id="feelsLike" class="detail-value"></strong>
+                    </div>
                 </div>
 
-                <div>
-                    <span>Humidity</span>
-                    <strong id="humidity"></strong>
+                <div class="detail-item" role="listitem">
+                    <span class="detail-icon" aria-hidden="true">💧</span>
+                    <div class="detail-content">
+                        <span class="detail-label">Humidity</span>
+                        <strong id="humidity" class="detail-value"></strong>
+                    </div>
                 </div>
 
-                <div>
-                    <span>Wind</span>
-                    <strong id="windSpeed"></strong>
+                <div class="detail-item" role="listitem">
+                    <span class="detail-icon" aria-hidden="true">💨</span>
+                    <div class="detail-content">
+                        <span class="detail-label">Wind</span>
+                        <strong id="windSpeed" class="detail-value"></strong>
+                    </div>
                 </div>
 
             </div>
 
         </section>
 
+        <!-- Footer -->
+        <footer class="panel-footer">
+            Powered by <a href="https://openweathermap.org" target="_blank" rel="noopener noreferrer">OpenWeather</a>
+        </footer>
+
     </main>
 
     <script src="script.js"></script>
-
 </body>
 </html>
