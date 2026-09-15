@@ -1,12 +1,17 @@
-name: CI
+name: CI/CD
 
 on:
   push:
     branches:
       - main
+
   pull_request:
     branches:
       - main
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   test:
@@ -28,3 +33,30 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  deploy:
+    name: Deploy to Azure
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Azure Login using WIF
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: WeatherNow
